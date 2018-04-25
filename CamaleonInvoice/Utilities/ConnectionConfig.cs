@@ -8,7 +8,7 @@ public static class ConnectionConfig
 {
     public static readonly int CamaleonBuild = 133;
     public static readonly string CamaleonVersion = "6.36.360";
-    public static string connectionString = "datasource = localhost; port = 3306; username = root; password = antonio; database= ;";
+    public static string connectionString = "datasource = localhost; port = 3306; username = root; password = antonio; database=inkagrill ; SslMode=none;";
 
     public static bool GetDataBases(ComboBox comboBox1, string server, string port, string username, string password)
     {

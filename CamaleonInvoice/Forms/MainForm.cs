@@ -12,6 +12,10 @@
     using System.Net.Http;
     using System.Windows.Forms;
 
+    using OpenInvoicePeru.Comun.Dto.Modelos;
+
+    using System.Collections.Generic;
+
     public partial class MainForm : Form
     {
         public MainForm()
@@ -67,7 +71,9 @@
 
         private void btnHide_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(Extensions.ToText("1295.25", true));
+            List<DetalleDocumento> detalles = GetCamaleon.GetDetalleFromMove(1242);
+            MessageBox.Show(detalles[0].Descripcion);
+            MessageBox.Show(Extensions.ToText("24.25", true));
         }
 
         private void btnSaveConfig_Click(object sender, EventArgs e)

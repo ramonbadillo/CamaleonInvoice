@@ -2,6 +2,7 @@
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using OpenInvoicePeru.Comun.Dto.Modelos;
 using System.Data;
 using System.Windows.Forms;
 
@@ -205,6 +206,150 @@ namespace CamaleonInvoice
                 }
             }*/
             return detamovesToSync;
+        }
+
+        public static List<DetalleDocumento> GetDetalleFromMove(int moveId)
+        {
+            List<DetalleDocumento> DetallesToRetrieve = new List<DetalleDocumento>();
+
+            MySqlConnection connection = null;
+
+            connection = new MySqlConnection(ConnectionConfig.connectionString);
+            Console.WriteLine(ConnectionConfig.connectionString);
+            MySqlCommand command = connection.CreateCommand();
+            command.CommandText = "SELECT " +
+                                  "it_tdetamove.Move_Deta_ITEM_ID,   " +
+                                  "it_titem.ITEM_Sale_Price,  " +
+                                  "it_titem.ITEM_Description,    " +
+                                  "it_tdetamove.Move_Deta_price,  " +
+                                  "it_tdetamove.Move_Deta_price,  " +
+                                  "it_tdetamove.Move_Deta_Q, " +
+                                  "it_tunit.UNIT_Name,  " +
+                                  //"# Cosas para sacar el descuento " +
+                                  "it_tdetamove.On_Sale, " +
+                                  "it_tdetamove.Discount_Code, " +
+                                  "it_tdetamove.Move_REG_price, " +
+                                  //"# it_tdetamove.Move_Deta_price - it_tdetamove.Move_REG_price " +
+                                  "it_tdetamove.Move_Deta_Tax_Value, " +
+                                  "it_tdetamove.Move_Deta_Tax2_Value,  " +
+                                  "(it_tdetamove.Move_Deta_Q * it_titem.ITEM_Sale_Price) AS 'Total', " +
+                                  "(it_tdetamove.Move_Deta_Q * it_titem.ITEM_Sale_Price) -it_tdetamove.Move_Deta_Tax_Value-it_tdetamove.Move_Deta_Tax2_Value AS 'Suma' " +
+                                  "FROM it_tdetamove " +
+                                  "INNER JOIN it_titem ON it_tdetamove.Move_Deta_ITEM_ID = it_titem.ITEM_ID " +
+                                  "INNER JOIN it_tunit ON it_tunit.UNIT_ID = it_titem.ITEM_Unit_ID " +
+                                  "WHERE  it_tdetamove.modi = 0 " +
+                                  "AND it_tdetamove.Subitem_of = 0 " +
+                                  "AND it_tdetamove.Move_Deta_Move_ID = " + moveId + ";";
+            MySqlDataReader Reader;
+            Console.WriteLine(command.CommandText);
+            connection.Open();
+            Reader = command.ExecuteReader();
+            int i = 0;
+            while (Reader.Read())
+            {
+                string Move_Deta_ID = Reader.GetString("Move_Deta_ITEM_ID");
+                string Descripcion = Reader.GetString("ITEM_Description");
+                decimal PrecioUnitario = Reader.GetInt32("Move_Deta_price");
+                decimal PrecioReferencial = Reader.GetInt32("Move_Deta_price");
+                decimal Cantidad = Reader.GetInt32("Move_Deta_Q");
+                string UnidadMedida = Reader.GetString("UNIT_Name");
+                //AQUI CALCULA
+                decimal Descuento = Reader.GetInt32("Move_Deta_Q");
+
+                decimal Impuesto = Reader.GetInt32("Move_Deta_Tax_Value");
+                decimal OtroImpuesto = Reader.GetInt32("Move_Deta_Tax2_Value");
+                decimal TotalVenta = Reader.GetInt32("Total");
+                decimal Suma = Reader.GetInt32("Suma");
+
+                DetalleDocumento deta = new DetalleDocumento()
+                {
+                    Id = i++,
+                    CodigoItem = Move_Deta_ID,
+                    Descripcion = Descripcion,
+                    PrecioUnitario = PrecioUnitario,
+                    PrecioReferencial = PrecioReferencial,
+                    TipoPrecio = "01: Precio unitario Incluye IGV",
+                    Cantidad = Cantidad,
+                    UnidadMedida = UnidadMedida,
+                    Descuento = Descuento,
+                    Impuesto = Impuesto, //IGV
+                    TipoImpuesto = "10: Gravado - Operación Onerosa",
+                    //ImpuestoSelectivo = 1.0m, //ISC
+                    OtroImpuesto = OtroImpuesto, // ISC
+                    TotalVenta = TotalVenta,
+                    Suma = Suma, // precio unitario * cantidad
+                };
+                DetallesToRetrieve.Add(deta);
+            }
+
+            Reader.Close();
+
+            return DetallesToRetrieve;
+        }
+
+        public static DocumentoElectronico GetDocumentoFromMove(int modeId)
+        {
+            DocumentoElectronico documento = new DocumentoElectronico();
+
+            Contribuyente emisor = new Contribuyente()
+            {
+                Departamento = Settings.Default.emDepartamento,
+                Direccion = Settings.Default.emDireccion,
+                Distrito = Settings.Default.emDistrito,
+                NombreComercial = Settings.Default.emNombreComercial,
+                NombreLegal = Settings.Default.emNombreLegal,
+                NroDocumento = Settings.Default.emRUC,
+                Provincia = Settings.Default.emProvincia,
+                Ubigeo = Settings.Default.emUbigeo,
+                Urbanizacion = Settings.Default.emUrbanizacion,
+                TipoDocumento = "",//TIPO DE DOCUMENTO
+            };
+
+            Contribuyente receptor = new Contribuyente()
+            {
+                Departamento = "",
+                Direccion = "",
+                Distrito = "",
+                NombreComercial = "",
+                NombreLegal = "",
+                NroDocumento = "",
+                Provincia = "",
+                Ubigeo = "",
+                Urbanizacion = "",
+                TipoDocumento = "",//TIPO DE DOCUMENTO
+            };
+
+            documento = new DocumentoElectronico()
+            {
+                TipoDocumento = "",
+                CalculoIgv = 1.0m,
+                CalculoIsc = 1.0m,
+                CalculoDetraccion = 1.0m,
+                Emisor = emisor,
+                Receptor = receptor,
+
+                IdDocumento = "",
+                FechaEmision = "",
+                Moneda = "PEN",
+                TipoOperacion = "",
+                MontoEnLetras = Extensions.ToText("100.25", false),
+                MontoPercepcion = 1.0m,
+                MontoDetraccion = 12.0m,
+
+                Items = GetDetalleFromMove(modeId),
+
+                Gravadas = 1.0m,
+                Exoneradas = 1.0m,
+                Inafectas = 1.0m,
+                Gratuitas = 1.0m,
+
+                TotalIgv = 18.0m,
+                TotalIsc = 1.0m,
+                TotalOtrosTributos = 1.0m,
+                TotalVenta = 100.0m,
+            };
+
+            return documento;
         }
     }
 }

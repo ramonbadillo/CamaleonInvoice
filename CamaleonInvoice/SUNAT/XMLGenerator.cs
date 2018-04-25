@@ -13,13 +13,14 @@
     using OpenInvoicePeru.Datos;
     using OpenInvoicePeru.Firmado;
     using OpenInvoicePeru.Xml;
+    using Microsoft.Practices.Unity;
 
     public class XMLGenerator
     {
         private DocumentoElectronico documento2;
 
-        //private readonly IDocumentoXml _documentoXml;
-        //private readonly ISerializador _serializador;
+        private readonly IDocumentoXml _documentoXml;
+        private readonly ISerializador _serializador;
 
         public DocumentoElectronico GenerateDocumentFromIttmove(int moveId)
         {
@@ -56,17 +57,16 @@
             DetalleDocumento deta = new DetalleDocumento()
             {
                 Id = 1,
-
                 CodigoItem = "",
                 Descripcion = "",
                 PrecioUnitario = 1.0m,
                 PrecioReferencial = 1.0m,
-                TipoPrecio = "",
+                TipoPrecio = "Precio Incluye IGV",
                 Cantidad = 1.0m,
                 UnidadMedida = "",
                 Descuento = 10.0m,
                 Impuesto = 1.0m, //IGV
-                TipoImpuesto = "",
+                TipoImpuesto = "Operacion Algo",
                 ImpuestoSelectivo = 1.0m, //ISC
                 OtroImpuesto = 1.0m,
                 TotalVenta = 100.0m,
@@ -77,17 +77,32 @@
 
             DocumentoElectronico documento = new DocumentoElectronico()
             {
-                TotalVenta = 100.0M,
-                TotalIgv = 18.0M,
-                Moneda = "PEN",
+                TipoDocumento = "",
+                CalculoIgv = 1.0m,
+                CalculoIsc = 1.0m,
+                CalculoDetraccion = 1.0m,
                 Emisor = emisor,
                 Receptor = receptor,
+
+                IdDocumento = "",
+                FechaEmision = "",
+                Moneda = "PEN",
+                TipoOperacion = "",
+                MontoEnLetras = Extensions.ToText("100.25", false),
+                MontoPercepcion = 1.0m,
+                MontoDetraccion = 12.0m,
+
                 Items = detaMoves,
 
-                FechaEmision = "",
-                Gravadas = 20.0M,
+                Gravadas = 1.0m,
+                Exoneradas = 1.0m,
+                Inafectas = 1.0m,
+                Gratuitas = 1.0m,
 
-                MontoEnLetras = Extensions.ToText("100.25", false),
+                TotalIgv = 18.0m,
+                TotalIsc = 1.0m,
+                TotalOtrosTributos = 1.0m,
+                TotalVenta = 100.0m,
             };
 
             return documento;
@@ -95,6 +110,9 @@
 
         public XMLGenerator()
         {
+            _serializador = serializador;
+            _documentoXml = _documentoXml = UnityConfig.GetConfiguredContainer()
+                .Resolve<IDocumentoXml>(GetType().Name);
             /*
             documento2 = GenerateDocumentFromIttmove(123);
 
