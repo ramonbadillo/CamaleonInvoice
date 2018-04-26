@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+
     using System.Configuration;
     using System.IO;
     using System.Linq;
@@ -35,7 +36,7 @@
                 Provincia = Settings.Default.emProvincia,
                 Ubigeo = Settings.Default.emUbigeo,
                 Urbanizacion = Settings.Default.emUrbanizacion,
-                TipoDocumento = "",//TIPO DE DOCUMENTO
+                TipoDocumento = "01",//TIPO DE DOCUMENTO
             };
 
             Contribuyente receptor = new Contribuyente()
@@ -77,17 +78,17 @@
 
             DocumentoElectronico documento = new DocumentoElectronico()
             {
-                TipoDocumento = "",
+                TipoDocumento = "01",
                 CalculoIgv = 1.0m,
                 CalculoIsc = 1.0m,
                 CalculoDetraccion = 1.0m,
                 Emisor = emisor,
                 Receptor = receptor,
 
-                IdDocumento = "",
-                FechaEmision = "",
+                IdDocumento = "FF11-00001",
+                FechaEmision = "2018-04-25",
                 Moneda = "PEN",
-                TipoOperacion = "",
+                TipoOperacion = "10",
                 MontoEnLetras = Extensions.ToText("100.25", false),
                 MontoPercepcion = 1.0m,
                 MontoDetraccion = 12.0m,
@@ -110,11 +111,19 @@
 
         public XMLGenerator()
         {
+            Console.WriteLine("++++++++++++++++++++++++++++++++++++++++++++++++++");
+            GenerarFactura gen = new GenerarFactura();
+            documento2 = GenerateDocumentFromIttmove(123);
+            string asd = gen.Create(documento2);
+            Console.WriteLine(asd);
+
+            /*
             _serializador = serializador;
+
             _documentoXml = _documentoXml = UnityConfig.GetConfiguredContainer()
                 .Resolve<IDocumentoXml>(GetType().Name);
+
             /*
-            documento2 = GenerateDocumentFromIttmove(123);
 
             var invoice = _documentoXml.Generar(documento2);
             var response = new DocumentoResponse();
