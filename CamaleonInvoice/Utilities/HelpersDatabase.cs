@@ -19,7 +19,7 @@ public static class HelpersDatabase
         string ReturnString = "0001/01/01";
         if (Reader[field] != DBNull.Value)
         {
-            ReturnString = Reader.GetDateTime(field).ToString("yyyy/MM/dd");
+            ReturnString = Reader.GetDateTime(field).ToString("yyyy-MM-dd");
         }
 
         return ReturnString;

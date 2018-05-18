@@ -298,5 +298,17 @@ namespace CamaleonInvoice.Properties {
                 this["emDistrito"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://www.sunat.gob.pe/ol-ti-itcpgem-sqa/billService")]
+        public string sunatEndPoint {
+            get {
+                return ((string)(this["sunatEndPoint"]));
+            }
+            set {
+                this["sunatEndPoint"] = value;
+            }
+        }
     }
 }

@@ -15,6 +15,7 @@
     using OpenInvoicePeru.Comun.Dto.Modelos;
 
     using System.Collections.Generic;
+    using OpenInvoicePeru.Servicio;
 
     public partial class MainForm : Form
     {
@@ -67,7 +68,7 @@
             }
         }
 
-        public CamaleonInvoice.XMLGenerator myGenerator = new XMLGenerator();
+        public CamaleonInvoice.SUNAT.XMLGenerator myGenerator = new CamaleonInvoice.SUNAT.XMLGenerator();
 
         private void btnHide_Click(object sender, EventArgs e)
         {
@@ -88,6 +89,7 @@
             Settings.Default.sunatClaveSOL = txtClaveSol.Text;
             Settings.Default.sunatCertPath = txtCertPath.Text;
             Settings.Default.sunatCertPass = txtPassCert.Text;
+            Settings.Default.sunatEndPoint = txtSunatEndPoint.Text;
 
             //// CAMALEON TAB
             Settings.Default.localServer = txtServer.Text;
@@ -119,6 +121,7 @@
             txtClaveSol.Text = Settings.Default.sunatClaveSOL;
             txtCertPath.Text = Settings.Default.sunatCertPath;
             txtPassCert.Text = Settings.Default.sunatCertPass;
+            txtSunatEndPoint.Text = Settings.Default.sunatEndPoint;
 
             //// CAMALEON TAB
             txtServer.Text = Settings.Default.localServer;
@@ -153,6 +156,21 @@
 
         private void btnGetStatus_Click_1(object sender, EventArgs e)
         {
+            SUNAT.CheckStatusDocumentos checar = new SUNAT.CheckStatusDocumentos(
+                new ParametrosConexion
+                {
+                    Ruc = Settings.Default.emRUC,
+                    UserName = Settings.Default.sunatUsuarioSOL,
+                    Password = Settings.Default.sunatClaveSOL,
+                    EndPointUrl = Settings.Default.sunatEndPoint
+                }
+            );
+
+            var resultado = checar.ConsultarTicket(txtNoDoc.Text);
+
+            Console.WriteLine(resultado.ConstanciaDeRecepcion);
+            Console.WriteLine(resultado.Exito);
+            Console.WriteLine(resultado.MensajeError);
         }
     }
 }

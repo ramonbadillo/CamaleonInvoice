@@ -99,6 +99,8 @@
             this.lblLocation = new System.Windows.Forms.Label();
             this.label25 = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
+            this.txtSunatEndPoint = new System.Windows.Forms.TextBox();
+            this.label28 = new System.Windows.Forms.Label();
             this.tabPage2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -420,6 +422,8 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.label28);
+            this.tabPage3.Controls.Add(this.txtSunatEndPoint);
             this.tabPage3.Controls.Add(this.label16);
             this.tabPage3.Controls.Add(this.textBox10);
             this.tabPage3.Controls.Add(this.label7);
@@ -838,6 +842,23 @@
             this.label26.TabIndex = 21;
             this.label26.Text = "Location:";
             // 
+            // txtSunatEndPoint
+            // 
+            this.txtSunatEndPoint.Location = new System.Drawing.Point(14, 343);
+            this.txtSunatEndPoint.Name = "txtSunatEndPoint";
+            this.txtSunatEndPoint.Size = new System.Drawing.Size(453, 26);
+            this.txtSunatEndPoint.TabIndex = 27;
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(23, 320);
+            this.label28.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(125, 20);
+            this.label28.TabIndex = 28;
+            this.label28.Text = "Sunat End Point";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -946,5 +967,7 @@
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.TextBox txtSunatEndPoint;
     }
 }

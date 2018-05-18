@@ -1,8 +1,7 @@
-﻿namespace CamaleonInvoice
+﻿namespace CamaleonInvoice.SUNAT
 {
     using System;
     using System.Collections.Generic;
-
     using System.Configuration;
     using System.IO;
     using System.Linq;
@@ -19,9 +18,6 @@
     public class XMLGenerator
     {
         private DocumentoElectronico documento2;
-
-        private readonly IDocumentoXml _documentoXml;
-        private readonly ISerializador _serializador;
 
         public DocumentoElectronico GenerateDocumentFromIttmove(int moveId)
         {
@@ -113,23 +109,23 @@
         {
             Console.WriteLine("++++++++++++++++++++++++++++++++++++++++++++++++++");
             GenerarFactura gen = new GenerarFactura();
-            documento2 = GenerateDocumentFromIttmove(123);
+            //documento2 = GenerateDocumentFromIttmove(123);
+            //
+            //Console.WriteLine(asd);
+            documento2 = GetCamaleon.GetDocumentoFromMove(43166);
             string asd = gen.Create(documento2);
-            Console.WriteLine(asd);
+            FirmadoRequest des = new FirmadoRequest()
+            {
+                TramaXmlSinFirma = asd,
+                CertificadoDigital = Convert.ToBase64String(File.ReadAllBytes(Settings.Default.sunatCertPath)),
+                PasswordCertificado = Settings.Default.sunatCertPass,
+                UnSoloNodoExtension = false
+            };
 
-            /*
-            _serializador = serializador;
+            FirmadoResponse res = Certificador.FirmarXml(des);
 
-            _documentoXml = _documentoXml = UnityConfig.GetConfiguredContainer()
-                .Resolve<IDocumentoXml>(GetType().Name);
-
-            /*
-
-            var invoice = _documentoXml.Generar(documento2);
-            var response = new DocumentoResponse();
-            var task = Task.Run(async () => await _serializador.GenerarXml(invoice));
-            response.TramaXmlSinFirma = task.Result;
-            */
+            File.WriteAllBytes($"XMLFirmado\\" + documento2.IdDocumento + ".xml",
+                                Convert.FromBase64String(res.TramaXmlFirmado));
         }
     }
 }

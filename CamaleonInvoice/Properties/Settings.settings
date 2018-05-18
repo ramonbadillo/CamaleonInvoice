@@ -71,5 +71,8 @@
     <Setting Name="emDistrito" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="sunatEndPoint" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://www.sunat.gob.pe/ol-ti-itcpgem-sqa/billService</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
