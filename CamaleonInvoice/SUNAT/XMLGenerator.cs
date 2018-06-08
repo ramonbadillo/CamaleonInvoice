@@ -112,20 +112,20 @@
             //documento2 = GenerateDocumentFromIttmove(123);
             //
             //Console.WriteLine(asd);
-            documento2 = GetCamaleon.GetDocumentoFromMove(43166);
-            string asd = gen.Create(documento2);
-            FirmadoRequest des = new FirmadoRequest()
-            {
-                TramaXmlSinFirma = asd,
-                CertificadoDigital = Convert.ToBase64String(File.ReadAllBytes(Settings.Default.sunatCertPath)),
-                PasswordCertificado = Settings.Default.sunatCertPass,
-                UnSoloNodoExtension = false
-            };
+            //documento2 = GetCamaleon.GetDocumentoFromMove(43166);
+            //string asd = gen.Create(documento2);
+            //FirmadoRequest des = new FirmadoRequest()
+            //{
+            //    TramaXmlSinFirma = asd,
+            //    CertificadoDigital = Convert.ToBase64String(File.ReadAllBytes(Settings.Default.sunatCertPath)),
+            //    PasswordCertificado = Settings.Default.sunatCertPass,
+            //    UnSoloNodoExtension = false
+            //};
 
-            FirmadoResponse res = Certificador.FirmarXml(des);
+            //FirmadoResponse res = Certificador.FirmarXml(des);
 
-            File.WriteAllBytes($"XMLFirmado\\" + documento2.IdDocumento + ".xml",
-                                Convert.FromBase64String(res.TramaXmlFirmado));
+            //File.WriteAllBytes($"XMLFirmado\\" + documento2.IdDocumento + ".xml",
+            //                    Convert.FromBase64String(res.TramaXmlFirmado));
         }
     }
 }

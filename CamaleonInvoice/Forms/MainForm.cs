@@ -72,9 +72,10 @@
 
         private void btnHide_Click(object sender, EventArgs e)
         {
-            List<DetalleDocumento> detalles = GetCamaleon.GetDetalleFromMove(1242);
-            MessageBox.Show(detalles[0].Descripcion);
-            MessageBox.Show(Extensions.ToText("24.25", true));
+            //List<DetalleDocumento> detalles = GetCamaleon.GetDetalleFromMove(1242);
+            GetCamaleon.GetDocumentoFromMove(10);
+            //MessageBox.Show(detalles[0].Descripcion);
+            //MessageBox.Show(Conversores.NumeroALetras(25.35m));
         }
 
         private void btnSaveConfig_Click(object sender, EventArgs e)

@@ -25,6 +25,17 @@ public static class HelpersDatabase
         return ReturnString;
     }
 
+    public static string GetTime(MySqlDataReader Reader, string field)
+    {
+        string ReturnString = "00:00:00";
+        if (Reader[field] != DBNull.Value)
+        {
+            ReturnString = Reader.GetDateTime(field).ToString("HH:mm:ss");
+        }
+
+        return ReturnString;
+    }
+
     public static string GetDateTime(MySqlDataReader Reader, string field)
     {
         string ReturnString = "0001/01/01 00:00:00";

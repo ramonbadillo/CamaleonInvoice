@@ -4,6 +4,8 @@
 
     public class CAB
     {
+        public Inafectas inafectas { get; set; }
+        public Gratuitas gratuitas { get; set; }
         public Gravadas gravadas { get; set; }
         public List<TotalImpuesto> totalImpuestos { get; set; }
         public string importeTotal { get; set; }
